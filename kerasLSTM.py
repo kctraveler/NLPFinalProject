@@ -62,7 +62,7 @@ class KerasLSTMClassifier(BaseEstimator, TransformerMixin):
   
   def _preprocess(self, texts):
     return [cleaner(x) for x in texts]
-  
+  #asfhjkahfkajhsfk
   def fit(self, X, y):
     '''Fit the vocabulary and the model.
        :params: X: list of texts. y: labels.
