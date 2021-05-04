@@ -23,9 +23,6 @@ def slang_txt(token):
   return  token not in stop_words_ and token not in list(string.punctuation) and token not in my_sw
 
 def cleaner(word):
-  #Remove links
-  word = re.sub(r'((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z]){2,6}([a-zA-Z0-9\.\&\/\?\:@\-_=#])*', 
-                '', word, flags=re.MULTILINE)
   #Decontracted words
   word = decontracted(word)
   #Remove users mentions
@@ -44,7 +41,6 @@ def cleaner(word):
 
 def decontracted(phrase):
     phrase = re.sub(r"https?://[A-Za-z0-9./]+", "url", phrase)
-    phrase = re.sub(r"[^A-Za-z0-9^,!./\'+-=]", "", phrase)
     phrase = re.sub(r"won\'t", "will not", phrase)
     phrase = re.sub(r"what's", "what is", phrase)
     phrase = re.sub(r"can\'t", "can not", phrase)

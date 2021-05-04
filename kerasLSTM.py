@@ -14,6 +14,7 @@ from keras.engine.topology import Layer
 from keras import initializers, regularizers, constraints
 from keras.models import Model
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.metrics import accuracy_score
 from preprocess import cleaner
 import numpy as np
 
@@ -37,19 +38,10 @@ class KerasLSTMClassifier(BaseEstimator, TransformerMixin):
     text_embedding = Embedding(input_dim=self.max_words+1, output_dim=self.emb_dim, input_length=self.input_length, 
                                mask_zero=False, weights=[self.embeddings_index], trainable=False)(input_text)
     text_embedding = SpatialDropout1D(0.4)(text_embedding)
-    #Bidirection LSTM
     bilstm =Bidirectional(LSTM(units=50,  recurrent_dropout=0.2, return_sequences = True))(text_embedding)
-    #Dropout
     x = Dropout(0.2)(bilstm)
-    # #LSTM
-    # x =(LSTM(units=50,  recurrent_dropout=0.2, return_sequences = True))(x)
-    # #Dropout
-    # x = Dropout(0.2)(x)
-    # #LSTM
-    # x =(LSTM(units=50,  recurrent_dropout=0.2))(x)
-    #Dense output layer
+    x =(LSTM(units=50,  recurrent_dropout=0.2))(x)
     out = Dense(units=self.n_classes, activation="softmax")(x)
-    #Compile model, using adam optimizer
     model = Model(inputs=[input_text],outputs=[out])
     model.compile(optimizer="adam",
     loss="categorical_crossentropy",
@@ -67,6 +59,7 @@ class KerasLSTMClassifier(BaseEstimator, TransformerMixin):
     '''Fit the vocabulary and the model.
        :params: X: list of texts. y: labels.
     '''
+    y = np_utils.to_categorical(y)
     self.tokenizer.fit_on_texts(X)
     self.tokenizer.word_index = {e: i for e,i in self.tokenizer.word_index.items() if i <= self.max_words}
     self.tokenizer.word_index[self.tokenizer.oov_token] = self.max_words + 1
