@@ -1,8 +1,8 @@
-__pycache__/
-
 # Default ignored files
 /shelf/
 /workspace.xml
 
 .idea
 .vscode
+/__pycache__
+*.code-workspace
