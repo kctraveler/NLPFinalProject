@@ -24,31 +24,38 @@ import logging
 from textblob import TextBlob
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-import warnings;warnings.filterwarnings('ignore')
+import warnings;
+from kerasRNN import KerasRNNClassifier
+
+warnings.filterwarnings('ignore')
 import preprocess
-#from kerasLSTM import KerasLSTMClassifier
+
+from kerasLSTM import KerasLSTMClassifier
 
 hate_speech_corpus = pd.read_csv("hate_speech.csv")
-#Shape
-print("Shape: ", hate_speech_corpus.shape)
-#Class distribution
-print("Class Values:\n", hate_speech_corpus['class'].value_counts())
+# Shape
+# print("Shape: ", hate_speech_corpus.shape)
+# Class distribution
+# print("Class Values:\n", hate_speech_corpus['class'].value_counts())
 
 hate_speech_corpus_final = hate_speech_corpus[['class', 'tweet']]
 
-print(hate_speech_corpus_final[0:5])
+# print(hate_speech_corpus_final[0:5])
 
 X = hate_speech_corpus_final[['tweet']]
 y = hate_speech_corpus_final[['class']]
 
-sns.barplot(['Non Toxic', 'Toxic', 'Hate'], hate_speech_corpus_final['class'].map({0:"Non Toxic", 1: "Toxic", 2: "Hate"}).value_counts(), palette="icefire")
+sns.barplot(['Non Toxic', 'Toxic', 'Hate'],
+            hate_speech_corpus_final['class'].map({0: "Non Toxic", 1: "Toxic", 2: "Hate"}).value_counts(),
+            palette="icefire")
 plt.title('Count of Toxic and Hate Comments of Dataset')
 plt.show()
 
-#Testing cleaner
-for idx in hate_speech_corpus_final.tail(15).index:
-  print(preprocess.cleaner(hate_speech_corpus_final.iloc[idx]['tweet']),'\n'  , hate_speech_corpus_final.iloc[idx]['tweet'], idx)
-  print("************")
+# Testing cleaner
+# for idx in hate_speech_corpus_final.tail(15).index:
+#     print(preprocess.cleaner(hate_speech_corpus_final.iloc[idx]['tweet']), '\n',
+#           hate_speech_corpus_final.iloc[idx]['tweet'], idx)
+#     print("************")
 
 # import spacy
 # from keras.preprocessing.text import Tokenizer
@@ -65,5 +72,8 @@ for idx in hate_speech_corpus_final.tail(15).index:
 #           embeddings_index[idx] = embedding
 #     except:
 #       pass
-
+#
 # lstmMODEL = KerasLSTMClassifier()
+
+rnn = KerasRNNClassifier()
+rnn.fit(X, y)
