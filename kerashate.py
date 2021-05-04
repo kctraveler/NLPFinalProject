@@ -27,7 +27,6 @@ from sklearn.model_selection import train_test_split
 from keras.utils import np_utils
 import warnings;warnings.filterwarnings('ignore')
 import preprocess
-<<<<<<< HEAD
 from kerasGRU import KerasGRUClassifier
 from kerasLSTM import KerasLSTMClassifier
 import tensorflow as tf
@@ -35,9 +34,6 @@ import tensorflow as tf
 physical_devices = tf.config.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0],True)
 
-=======
-from kerasLSTM import KerasLSTMClassifier
->>>>>>> master
 
 hate_speech_corpus = pd.read_csv("hate_speech.csv")
 # #Shape
@@ -79,17 +75,14 @@ for word, idx in tokenizer.word_index.items():
           embeddings_index[idx] = embedding
     except:
       pass
-<<<<<<< HEAD
 print(embeddings_index[1])
 #lstmMODEL = KerasLSTMClassifier()
 gru = KerasGRUClassifier()
 
 gru.fit(X,y)
-=======
 
 x_train, x_test, y_train, y_test = train_test_split(X,y, test_size = 0.2, random_state = 444, stratify=y)
 lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
 print(lstmMODEL.model.summary())
 lstmMODEL.fit(x_train, y_train)
 # print(lstmMODEL.score(x_test, y_test))
->>>>>>> master
