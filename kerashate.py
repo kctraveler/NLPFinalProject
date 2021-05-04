@@ -50,20 +50,20 @@ for idx in hate_speech_corpus_final.tail(15).index:
   print(preprocess.cleaner(hate_speech_corpus_final.iloc[idx]['tweet']),'\n'  , hate_speech_corpus_final.iloc[idx]['tweet'], idx)
   print("************")
 
-# import spacy
-# from keras.preprocessing.text import Tokenizer
-# #!python -m spacy download en_core_web_lg
-# nlp = spacy.load('/usr/local/lib/python3.6/dist-packages/en_core_web_lg/en_core_web_lg-2.1.0')
-# #Embedding
-# tokenizer = Tokenizer(num_words=30000)
-# tokenizer = Tokenizer(num_words=30000)
-# tokenizer.fit_on_texts(hate_speech_corpus_final['tweet'])
-# embeddings_index = np.zeros((30000 + 1, 300))
-# for word, idx in tokenizer.word_index.items():
-#     try:
-#           embedding = nlp.vocab[word].vector
-#           embeddings_index[idx] = embedding
-#     except:
-#       pass
-
-# lstmMODEL = KerasLSTMClassifier()
+import spacy
+from keras.preprocessing.text import Tokenizer
+#!python -m spacy download en_core_web_lg
+nlp = spacy.load("en_core_web_lg")
+#Embedding
+tokenizer = Tokenizer(num_words=30000)
+tokenizer = Tokenizer(num_words=30000)
+tokenizer.fit_on_texts(hate_speech_corpus_final['tweet'])
+embeddings_index = np.zeros((30000 + 1, 300))
+for word, idx in tokenizer.word_index.items():
+    try:
+          embedding = nlp.vocab[word].vector
+          embeddings_index[idx] = embedding
+    except:
+      pass
+print(embeddings_index[1])
+#lstmMODEL = KerasLSTMClassifier()
