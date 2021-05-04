@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from zipfile import ZipFile
-import re
 from nltk.stem.snowball import SnowballStemmer
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
@@ -76,4 +74,4 @@ x_train, x_test, y_train, y_test = train_test_split(X,y, test_size = 0.2, random
 lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
 print(lstmMODEL.model.summary())
 lstmMODEL.fit(x_train, y_train)
-# print(lstmMODEL.score(x_test, y_test))
+print(lstmMODEL.score(x_test, y_test))
