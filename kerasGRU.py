@@ -3,6 +3,7 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 from keras.utils import np_utils
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report, confusion_matrix
 from tensorflow import keras
 from tensorflow.keras import layers
 
@@ -71,4 +72,8 @@ class KerasGRUClassifier:
     
     def score(self, X, y):
         y_pred = self.predict(X)
+        print('Confusion Matrix:')
+        print(confusion_matrix(y, y_pred))
+        print('Classification Report:')
+        print(classification_report(y, y_pred))
         return accuracy_score(y, y_pred)

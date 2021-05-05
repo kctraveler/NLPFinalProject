@@ -5,6 +5,7 @@ from keras.utils.np_utils import to_categorical
 from keras.layers import Dense, SimpleRNN, Activation, InputLayer, Embedding
 from keras.models import Sequential
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report, confusion_matrix
 from preprocess import cleaner
 
 
@@ -64,5 +65,9 @@ class KerasRNNClassifier:
         return history
 
     def score(self, X, y):
-        y_pred = self._predict(X)
+        y_pred = self.predict(X)
+        print('Confusion Matrix:')
+        print(confusion_matrix(y, y_pred))
+        print('Classification Report:')
+        print(classification_report(y, y_pred))
         return accuracy_score(y, y_pred)

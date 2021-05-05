@@ -7,7 +7,7 @@ from keras.preprocessing.text import Tokenizer
 from keras.utils import np_utils
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.metrics import accuracy_score
-
+from sklearn.metrics import classification_report, confusion_matrix
 from preprocess import cleaner
 
 
@@ -32,7 +32,7 @@ class KerasLSTMClassifier(BaseEstimator, TransformerMixin):
                                    mask_zero=False, weights=[self.embeddings_index], trainable=False)(input_text)
         text_embedding = SpatialDropout1D(0.4)(text_embedding)
         bilstm = Bidirectional(
-            LSTM(units=50, recurrent_dropout=0, activation="tanh", recurrent_activation="sigmoid", unroll=False,
+            LSTM(units=10, recurrent_dropout=0, activation="tanh", recurrent_activation="sigmoid", unroll=False,
                  use_bias=True))(text_embedding)
         x = Dropout(0.2)(bilstm)
         out = Dense(units=self.n_classes, activation="softmax")(x)
@@ -58,7 +58,8 @@ class KerasLSTMClassifier(BaseEstimator, TransformerMixin):
         self.tokenizer.word_index = {e: i for e, i in self.tokenizer.word_index.items() if i <= self.max_words}
         self.tokenizer.word_index[self.tokenizer.oov_token] = self.max_words + 1
         seqs = self._get_sequences(self._preprocess(X))
-        history = self.model.fit([seqs], y, batch_size=self.bs, epochs=self.epochs, validation_split=0.1)
+        print(len(seqs), len(y))
+        history = self.model.fit(seqs, y, batch_size=self.bs, epochs=self.epochs, validation_split=0.1)
         return history
 
     def predict_proba(self, X, y=None):
@@ -70,4 +71,8 @@ class KerasLSTMClassifier(BaseEstimator, TransformerMixin):
 
     def score(self, X, y):
         y_pred = self.predict(X)
+        print('Confusion Matrix:')
+        print(confusion_matrix(y, y_pred))
+        print('Classification Report:')
+        print(classification_report(y, y_pred))
         return accuracy_score(y, y_pred)

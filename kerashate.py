@@ -47,7 +47,6 @@ X = hate_speech_corpus_final[['tweet']]
 y = hate_speech_corpus_final[['class']]
 encoder = LabelEncoder()
 y = encoder.fit_transform(y)
-Y = np_utils.to_categorical(y)
 X = X.values
 X = [x[0] for x in X]
 plt.figure('Dataset Details')
@@ -57,7 +56,7 @@ plt.title('Count of Toxic and Hate Comments of Dataset')
 # !python -m spacy download en_core_web_lg
 nlp = spacy.load("en_core_web_lg")
 
-# Embedding
+# Tokenizing & Vectorizing to create embeddings
 tokenizer = Tokenizer(num_words=30000)
 tokenizer.fit_on_texts(X)
 embeddings_index = np.zeros((30000 + 1, 300))
@@ -73,9 +72,8 @@ x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
 print(lstmMODEL.model.summary())
 h = lstmMODEL.fit(x_train, y_train)
-print(lstmMODEL.score(x_test, y_test))
-plotHistory(h)
-
+print('\nLSTM Test Accuracy %.5f' % lstmMODEL.score(x_test, y_test))
+plotHistory(h, "LSTM")
 gru = KerasGRUClassifier()
 
 h = gru.fit(x_train, y_train)

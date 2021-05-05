@@ -37,6 +37,7 @@ def cleaner(word):
   #Cleaning, lowering and remove whitespaces
   word = " ".join(list_word_clean)
   word = re.sub('[^a-zA-Z]', ' ', word)
+
   return word.lower().strip()
 
 def decontracted(phrase):
