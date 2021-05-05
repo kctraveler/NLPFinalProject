@@ -6,10 +6,11 @@ from keras.models import Model
 from keras.layers import Dense, Input, LSTM, Bidirectional, Activation, Conv1D, GRU, TimeDistributed
 from keras.layers import Dropout, Embedding, GlobalMaxPooling1D, MaxPooling1D, Add, Flatten, SpatialDropout1D
 from keras.utils.np_utils import to_categorical
-from keras.layers import Dense, SimpleRNN, Activation
+from keras.layers import Dense, SimpleRNN, Activation, InputLayer, Embedding
 from keras.models import Sequential
 from keras import optimizers
 from sklearn.metrics import accuracy_score
+
 
 
 class KerasRNNClassifier:
@@ -30,13 +31,20 @@ class KerasRNNClassifier:
 
     def _rnn(self):
         model = Sequential()
-        model.add(SimpleRNN(50, input_shape=(49, 1), return_sequences=False))
-        model.add(Dense(46))
-        model.add(Activation('softmax'))
+        model.add(InputLayer((self.input_length,)))
+        model.add(
+           Embedding(
+               input_dim=self.max_words, output_dim=self.emb_dim,
+               input_length=self.input_length, mask_zero=False,
+               trainable=False))
+        model.add(SimpleRNN(50, return_sequences=False))
+        model.add(Dense(3))
+        #model.add(Activation('softmax'))
 
-        adam = optimizers.Adam(lr=0.001)
-        model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
+        
+        model.compile(loss='categorical_crossentropy', optimizer="adam", metrics=['accuracy'])
 
+        model.summary()
         return model
 
     def _get_sequences(self, texts):

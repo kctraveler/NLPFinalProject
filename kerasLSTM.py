@@ -22,7 +22,7 @@ import numpy as np
 class KerasLSTMClassifier(BaseEstimator, TransformerMixin):
   '''Wrapper class for keras text classification models that takes raw text as input.'''
   
-  def __init__(self, max_words=30000, input_length=20, emb_dim=300, n_classes=3, epochs=15, batch_size=64, emb_idx=0):
+  def __init__(self, max_words=30000, input_length=20, emb_dim=300, n_classes=3, epochs=20, batch_size=64, emb_idx=0):
     self.max_words = max_words
     self.input_length = input_length
     self.emb_dim = emb_dim
@@ -38,9 +38,8 @@ class KerasLSTMClassifier(BaseEstimator, TransformerMixin):
     text_embedding = Embedding(input_dim=self.max_words+1, output_dim=self.emb_dim, input_length=self.input_length, 
                                mask_zero=False, weights=[self.embeddings_index], trainable=False)(input_text)
     text_embedding = SpatialDropout1D(0.4)(text_embedding)
-    bilstm =Bidirectional(LSTM(units=50,  recurrent_dropout=0.2, return_sequences = True))(text_embedding)
+    bilstm =Bidirectional(LSTM(units=50,  recurrent_dropout=0, activation="tanh", recurrent_activation="sigmoid", unroll=False, use_bias=True))(text_embedding)
     x = Dropout(0.2)(bilstm)
-    x =(LSTM(units=50,  recurrent_dropout=0.2))(x)
     out = Dense(units=self.n_classes, activation="softmax")(x)
     model = Model(inputs=[input_text],outputs=[out])
     model.compile(optimizer="adam",
@@ -64,7 +63,8 @@ class KerasLSTMClassifier(BaseEstimator, TransformerMixin):
     self.tokenizer.word_index = {e: i for e,i in self.tokenizer.word_index.items() if i <= self.max_words}
     self.tokenizer.word_index[self.tokenizer.oov_token] = self.max_words + 1
     seqs = self._get_sequences(self._preprocess(X))
-    self.model.fit([seqs ], y, batch_size=self.bs, epochs=self.epochs, validation_split=0.1)
+    history = self.model.fit([seqs ], y, batch_size=self.bs, epochs=self.epochs, validation_split=0.1)
+    return history
   
   def predict_proba(self, X, y=None):
     seqs = self._get_sequences(self._preprocess(X))
@@ -75,4 +75,4 @@ class KerasLSTMClassifier(BaseEstimator, TransformerMixin):
   
   def score(self, X, y):
     y_pred = self.predict(X)
-    return accuracy_score(np.argmax(y, axis=1), y_pred)
+    return accuracy_score(y, y_pred)

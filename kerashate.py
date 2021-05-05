@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from zipfile import ZipFile
-import re
 from nltk.stem.snowball import SnowballStemmer
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
@@ -27,21 +25,48 @@ from sklearn.model_selection import train_test_split
 from keras.utils import np_utils
 import warnings;warnings.filterwarnings('ignore')
 import preprocess
+from kerasGRU import KerasGRUClassifier
 from kerasLSTM import KerasLSTMClassifier
 from kerasRNN import KerasRNNClassifier
 
-physical_devices = tf.config.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0],True)
+
 
 hate_speech_corpus = pd.read_csv("hate_speech.csv")
 # Shape
 # print("Shape: ", hate_speech_corpus.shape)
 # Class distribution
+import tensorflow as tf
+
+physical_devices = tf.config.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(physical_devices[0],True)
+
+
+def plotHistory(history, name="Model"):
+      #  "Accuracy"
+      plt.figure(name + " Accuracy")
+      plt.plot(history.history['accuracy'])
+      plt.plot(history.history['val_accuracy'])
+      plt.title(name + ' Accuracy')
+      plt.ylabel('accuracy')
+      plt.xlabel('epoch')
+      plt.legend(['train', 'validation'], loc='upper left')
+     
+      # "Loss"
+      plt.figure(name + " Loss")
+      plt.plot(history.history['loss'])
+      plt.plot(history.history['val_loss'])
+      plt.title(name + ' Loss')
+      plt.ylabel('loss')
+      plt.xlabel('epoch')
+      plt.legend(['train', 'validation'], loc='upper left')
+
+hate_speech_corpus = pd.read_csv("hate_speech.csv")
+# #Shape
+# print("Shape: ", hate_speech_corpus.shape)
+# #Class distribution
 # print("Class Values:\n", hate_speech_corpus['class'].value_counts())
 
 hate_speech_corpus_final = hate_speech_corpus[['class', 'tweet']]
-
-# print(hate_speech_corpus_final[0:5])
 
 X = hate_speech_corpus_final[['tweet']]
 y = hate_speech_corpus_final[['class']]
@@ -50,14 +75,10 @@ y = encoder.fit_transform(y)
 Y = np_utils.to_categorical(y)
 X = X.values
 X = [x[0] for x in X]
+plt.figure('Dataset Details')
 sns.barplot(['Non Toxic', 'Toxic', 'Hate'], hate_speech_corpus_final['class'].map({0:"Non Toxic", 1: "Toxic", 2: "Hate"}).value_counts(), palette="icefire")
 plt.title('Count of Toxic and Hate Comments of Dataset')
-plt.show()
 
-#Testing cleaner
-# for idx in hate_speech_corpus_final.tail(15).index:
-#   print(preprocess.cleaner(hate_speech_corpus_final.iloc[idx]['tweet']),'\n'  , hate_speech_corpus_final.iloc[idx]['tweet'], idx)
-#   print("************")
 
 import spacy
 from keras.preprocessing.text import Tokenizer
@@ -83,4 +104,13 @@ x_train, x_test, y_train, y_test = train_test_split(X,y, test_size = 0.2, random
 # print(lstmMODEL.score(x_test, y_test))
 
 rnn = KerasRNNClassifier()
-rnn.fit(X, y)
+rnn.fit(x_train, y_train)
+
+
+# gru = KerasGRUClassifier()
+
+# h = gru.fit(x_train,y_train)
+# print('\nGRU Test Accuracy %.5f' % (gru.score(x_test,y_test)))
+# plotHistory(h, "GRU")
+
+plt.show()
