@@ -38,8 +38,6 @@ class KerasRNNClassifier:
         model.add(Activation('softmax'))
 
         model.compile(loss='categorical_crossentropy', optimizer="adam", metrics=['accuracy'])
-
-        model.summary()
         return model
 
     def _get_sequences(self, texts):
@@ -64,7 +62,7 @@ class KerasRNNClassifier:
         return history
 
     def score(self, X, y):
-        y_pred = self.predict(X)
+        y_pred = self._predict(X)
         print('Confusion Matrix:')
         print(confusion_matrix(y, y_pred))
         print('Classification Report:')

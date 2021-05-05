@@ -69,21 +69,38 @@ for word, idx in tokenizer.word_index.items():
 
 x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=444, stratify=y)
 
+<<<<<<< HEAD
 # lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
 # print(lstmMODEL.model.summary())
 # h = lstmMODEL.fit(x_train, y_train)
 # print('\nLSTM Test Accuracy %.5f' % lstmMODEL.score(x_test, y_test))
 # plotHistory(h, "LSTM")
+=======
+lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
+lstmMODEL.model.summary()
+h = lstmMODEL.fit(x_train, y_train)
+print('\nLSTM Test Accuracy %.5f' % lstmMODEL.score(x_test, y_test))
+plotHistory(h, "LSTM")
+gru = KerasGRUClassifier()
+>>>>>>> cd0a2fda4d2208f5779d3db8c65e78f67f72cdf1
 
 gru = KerasGRUClassifier()
 h = gru.fit(x_train, y_train)
 print('\nGRU Test Accuracy %.5f' % (gru.score(x_test, y_test)))
 plotHistory(h, "GRU")
 
+<<<<<<< HEAD
 # rnn = KerasRNNClassifier()
 # print(rnn.model.summary())
 # rnnFit = rnn.fit(x_train, y_train)
 # print('\nRNN Test Accuracy %.5f' % (rnn.score(x_test, y_test)))
 # plotHistory(rnnFit, "RNN")
+=======
+rnn = KerasRNNClassifier()
+rnn.model.summary()
+rnnFit = rnn.fit(x_train, y_train)
+print('\nRNN Test Accuracy %.5f' % (rnn.score(x_test, y_test)))
+plotHistory(rnnFit, "RNN")
+>>>>>>> cd0a2fda4d2208f5779d3db8c65e78f67f72cdf1
 
 plt.show()
