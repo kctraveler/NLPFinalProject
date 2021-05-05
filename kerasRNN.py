@@ -30,13 +30,19 @@ class KerasRNNClassifier:
 
     def _rnn(self):
         model = Sequential()
-        model.add(SimpleRNN(50, input_shape=(49, 1), return_sequences=False))
+        model.add(SimpleRNN(50, input_shape=(49, 1), return_sequences=True))
+        model.add(
+           Embedding(
+               input_dim=self.max_words, output_dim=self.emb_dim,
+               input_length=self.input_length, mask_zero=False,
+               trainable=False))
         model.add(Dense(46))
         model.add(Activation('softmax'))
 
         adam = optimizers.Adam(lr=0.001)
         model.compile(loss='categorical_crossentropy', optimizer=adam, metrics=['accuracy'])
 
+        model.summary()
         return model
 
     def _get_sequences(self, texts):
@@ -49,10 +55,10 @@ class KerasRNNClassifier:
         return self.model.predict(seqs)
 
     def _predict(self, X, y=None):
-        return np.argmax(self.predict_proba(X), axis=1)
+        return np.argmax(self._predict_probability(X), axis=1)
 
     def score(self, X, y):
-        y_pred = self.predict(X)
+        y_pred = self._predict(X)
         return accuracy_score(np.argmax(y, axis=1), y_pred)
 
     def fit(self, X, y):
