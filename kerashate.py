@@ -69,16 +69,16 @@ for word, idx in tokenizer.word_index.items():
 
 x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=444, stratify=y)
 
-# lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
-# print(lstmMODEL.model.summary())
-# h = lstmMODEL.fit(x_train, y_train)
-# print('\nLSTM Test Accuracy %.5f' % lstmMODEL.score(x_test, y_test))
-# plotHistory(h, "LSTM")
+lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
+print(lstmMODEL.model.summary())
+h = lstmMODEL.fit(x_train, y_train)
+print('\nLSTM Test Accuracy %.5f' % lstmMODEL.score(x_test, y_test))
+plotHistory(h, "LSTM")
 
-# gru = KerasGRUClassifier()
-# h = gru.fit(x_train, y_train)
-# print('\nGRU Test Accuracy %.5f' % (gru.score(x_test, y_test)))
-# plotHistory(h, "GRU")
+gru = KerasGRUClassifier()
+h = gru.fit(x_train, y_train)
+print('\nGRU Test Accuracy %.5f' % (gru.score(x_test, y_test)))
+plotHistory(h, "GRU")
 
 rnn = KerasRNNClassifier()
 rnn.model.summary()
