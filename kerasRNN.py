@@ -1,14 +1,11 @@
 import numpy as np
-from keras.engine.input_layer import InputLayer
 from keras.preprocessing.text import Tokenizer
-from preprocess import cleaner
 from keras.preprocessing.sequence import pad_sequences
-from keras.layers import Embedding
 from keras.utils.np_utils import to_categorical
 from keras.layers import Dense, SimpleRNN, Activation, InputLayer, Embedding
 from keras.models import Sequential
-from keras import optimizers
 from sklearn.metrics import accuracy_score
+from preprocess import cleaner
 
 
 class KerasRNNClassifier:

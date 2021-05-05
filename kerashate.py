@@ -1,28 +1,23 @@
 import pandas as pd
 import numpy as np
+import tensorflow as tf
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from keras.utils import np_utils
-import warnings;
+import warnings
+import spacy
+from keras.preprocessing.text import Tokenizer
 
-warnings.filterwarnings('ignore')
 from kerasLSTM import KerasLSTMClassifier
 from kerasGRU import KerasGRUClassifier
 from kerasRNN import KerasRNNClassifier
 
-hate_speech_corpus = pd.read_csv("hate_speech.csv")
-# Shape
-# print("Shape: ", hate_speech_corpus.shape)
-# Class distribution
-
-import tensorflow as tf
+warnings.filterwarnings('ignore')
 
 physical_devices = tf.config.list_physical_devices('GPU')
-
-
-# tf.config.experimental.set_memory_growth(physical_devices[0],True)
+tf.config.experimental.set_memory_growth(physical_devices[0],True)
 
 
 def plotHistory(history, name="Model"):
@@ -46,11 +41,6 @@ def plotHistory(history, name="Model"):
 
 
 hate_speech_corpus = pd.read_csv("hate_speech.csv")
-# #Shape
-# print("Shape: ", hate_speech_corpus.shape)
-# #Class distribution
-# print("Class Values:\n", hate_speech_corpus['class'].value_counts())
-
 hate_speech_corpus_final = hate_speech_corpus[['class', 'tweet']]
 
 X = hate_speech_corpus_final[['tweet']]
@@ -63,14 +53,6 @@ X = [x[0] for x in X]
 plt.figure('Dataset Details')
 sns.barplot(['Non Toxic', 'Toxic', 'Hate'], hate_speech_corpus_final['class'].map({0:"Non Toxic", 1: "Toxic", 2: "Hate"}).value_counts(), palette="icefire")
 plt.title('Count of Toxic and Hate Comments of Dataset')
-
-# Testing cleaner
-# for idx in hate_speech_corpus_final.tail(15).index:
-#   print(preprocess.cleaner(hate_speech_corpus_final.iloc[idx]['tweet']),'\n'  , hate_speech_corpus_final.iloc[idx]['tweet'], idx)
-#   print("************")
-
-import spacy
-from keras.preprocessing.text import Tokenizer
 
 # !python -m spacy download en_core_web_lg
 nlp = spacy.load("en_core_web_lg")

@@ -1,14 +1,12 @@
 import numpy as np
-import tensorflow as tensorflow
-from tensorflow import keras
-from tensorflow.keras import layers
-from keras.preprocessing.text import Tokenizer, text_to_word_sequence
-from preprocess import cleaner
 from keras.preprocessing.sequence import pad_sequences
-from keras.models import Model
+from keras.preprocessing.text import Tokenizer
 from keras.utils import np_utils
 from sklearn.metrics import accuracy_score
+from tensorflow import keras
+from tensorflow.keras import layers
 
+from preprocess import cleaner
 
 
 class KerasGRUClassifier:
