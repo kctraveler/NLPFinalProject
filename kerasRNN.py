@@ -11,10 +11,9 @@ from keras import optimizers
 from sklearn.metrics import accuracy_score
 
 
-
 class KerasRNNClassifier:
 
-    def __init__(self, max_words=30000, input_length=20, emb_dim=300, n_classes=3, epochs=15, batch_size=64, emb_idx=0):
+    def __init__(self, max_words=30000, input_length=20, emb_dim=300, n_classes=3, epochs=20, batch_size=64, emb_idx=0):
         self.max_words = max_words
         self.input_length = input_length
         self.emb_dim = emb_dim
@@ -32,15 +31,14 @@ class KerasRNNClassifier:
         model = Sequential()
         model.add(InputLayer((self.input_length,)))
         model.add(
-           Embedding(
-               input_dim=self.max_words, output_dim=self.emb_dim,
-               input_length=self.input_length, mask_zero=False,
-               trainable=False))
+            Embedding(
+                input_dim=self.max_words, output_dim=self.emb_dim,
+                input_length=self.input_length, mask_zero=False,
+                trainable=False))
         model.add(SimpleRNN(50, return_sequences=False))
         model.add(Dense(3))
-        #model.add(Activation('softmax'))
+        model.add(Activation('softmax'))
 
-        
         model.compile(loss='categorical_crossentropy', optimizer="adam", metrics=['accuracy'])
 
         model.summary()
@@ -58,10 +56,6 @@ class KerasRNNClassifier:
     def _predict(self, X, y=None):
         return np.argmax(self._predict_probability(X), axis=1)
 
-    def score(self, X, y):
-        y_pred = self._predict(X)
-        return accuracy_score(np.argmax(y, axis=1), y_pred)
-
     def fit(self, X, y):
         y = to_categorical(y)
         self.tokenizer.fit_on_texts(X)
@@ -69,3 +63,9 @@ class KerasRNNClassifier:
         self.tokenizer.word_index[self.tokenizer.oov_token] = self.max_words + 1
         seqs = self._get_sequences(self._preprocess(X))
         self.model.fit([seqs], y, batch_size=self.bs, epochs=self.epochs, validation_split=0.3)
+        history = self.model.fit([seqs ], y, batch_size=self.bs, epochs=self.epochs, validation_split=0.1)
+        return history
+
+    def score(self, X, y):
+        y_pred = self._predict(X)
+        return accuracy_score(y, y_pred)
