@@ -22,7 +22,7 @@ import numpy as np
 class KerasLSTMClassifier(BaseEstimator, TransformerMixin):
   '''Wrapper class for keras text classification models that takes raw text as input.'''
   
-  def __init__(self, max_words=30000, input_length=20, emb_dim=300, n_classes=3, epochs=3, batch_size=64, emb_idx=0):
+  def __init__(self, max_words=30000, input_length=20, emb_dim=300, n_classes=3, epochs=20, batch_size=64, emb_idx=0):
     self.max_words = max_words
     self.input_length = input_length
     self.emb_dim = emb_dim

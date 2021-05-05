@@ -15,7 +15,7 @@ class KerasGRUClassifier:
 
     def __init__(
                 self, max_words=20000, input_length=20, emb_dim=300,
-                n_classes=3, epochs=3, batch_size=128, emb_idx=300):
+                n_classes=3, epochs=20, batch_size=128, emb_idx=300):
         self.max_words = max_words
         self.input_length = input_length
         self.emb_dim = emb_dim
