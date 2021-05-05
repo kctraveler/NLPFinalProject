@@ -6,12 +6,16 @@ from keras.preprocessing.text import Tokenizer, text_to_word_sequence
 from preprocess import cleaner
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Model
+from keras.utils import np_utils
+from sklearn.metrics import accuracy_score
+
+
 
 class KerasGRUClassifier:
 
     def __init__(
                 self, max_words=20000, input_length=20, emb_dim=300,
-                n_classes=3, epochs=15, batch_size=128, emb_idx=300):
+                n_classes=3, epochs=3, batch_size=128, emb_idx=300):
         self.max_words = max_words
         self.input_length = input_length
         self.emb_dim = emb_dim
@@ -19,7 +23,8 @@ class KerasGRUClassifier:
         self.epochs = epochs
         self.bs = batch_size
         self.embeddings_index = emb_idx
-        self.tokenizer = Tokenizer(num_words=self.max_words+1, lower=True, split=' ')
+        self.tokenizer = Tokenizer(
+            num_words=self.max_words+1, lower=True, split=' ')
         self.model = self._build_model()
 
     def _build_model(self):
@@ -29,11 +34,10 @@ class KerasGRUClassifier:
            layers.Embedding(
                input_dim=self.max_words, output_dim=self.emb_dim,
                input_length=self.input_length, mask_zero=False,
-               trainable=False ))
-        # model.add(layers.Flatten())
-        model.add(layers.GRU(400))
+               trainable=False))
+        model.add(layers.Bidirectional(layers.GRU(400)))
         model.add(layers.Dense(3, activation="softmax"))
-        
+
         model.compile(
             optimizer="adam",
             loss="categorical_crossentropy",
@@ -43,32 +47,29 @@ class KerasGRUClassifier:
 
     def _get_sequences(self, texts):
         seqs = self.tokenizer.texts_to_sequences(texts)
-        seqs = pad_sequences(seqs, maxlen=self.input_length, value=0)
-        return seqs
-  
+        return pad_sequences(seqs, maxlen=self.input_length, value=0)
+
     def _preprocess(self, texts):
-        v = [cleaner(x) for x in texts['tweet']]
-        return v
+        return [cleaner(x) for x in texts]
   
     def fit(self, X, y):
         '''Fit the vocabulary and the model.
-           :params: X: list of texts. y: labels.
+        :params: X: list of texts. y: labels.
         '''
-        y = keras.utils.to_categorical(y)
+        y = np_utils.to_categorical(y)
         self.tokenizer.fit_on_texts(X)
         self.tokenizer.word_index = {e: i for e,i in self.tokenizer.word_index.items() if i <= self.max_words}
         self.tokenizer.word_index[self.tokenizer.oov_token] = self.max_words + 1
         seqs = self._get_sequences(self._preprocess(X))
-        self.model.fit([seqs], y, batch_size=self.bs, epochs=self.epochs,  validation_split=0.3)
-
-  
+        self.model.fit([seqs ], y, batch_size=self.bs, epochs=self.epochs, validation_split=0.1)
+    
     def predict_proba(self, X, y=None):
         seqs = self._get_sequences(self._preprocess(X))
         return self.model.predict(seqs)
-  
+    
     def predict(self, X, y=None):
-        return np.argmax(self.predict_proba(X), axis=1)
+        return np.argmax(self.predict_proba(X), axis=0)
     
     def score(self, X, y):
         y_pred = self.predict(X)
-        return accuracy_score(np.argmax(y, axis=1), y_pred)
+        return accuracy_score(np.argmax(y, axis=0), y_pred)

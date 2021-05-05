@@ -77,12 +77,15 @@ for word, idx in tokenizer.word_index.items():
       pass
 print(embeddings_index[1])
 #lstmMODEL = KerasLSTMClassifier()
-gru = KerasGRUClassifier()
 
-gru.fit(X,y)
 
 x_train, x_test, y_train, y_test = train_test_split(X,y, test_size = 0.2, random_state = 444, stratify=y)
-lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
-print(lstmMODEL.model.summary())
-lstmMODEL.fit(x_train, y_train)
+# lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
+# print(lstmMODEL.model.summary())
+# lstmMODEL.fit(x_train, y_train)
 # print(lstmMODEL.score(x_test, y_test))
+
+gru = KerasGRUClassifier()
+
+gru.fit(x_train,y_train)
+print(gru.score(x_test,y_test))
