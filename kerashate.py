@@ -61,13 +61,7 @@ Y = np_utils.to_categorical(y)
 X = X.values
 X = [x[0] for x in X]
 plt.figure('Dataset Details')
-sns.barplot(['Non Toxic', 'Toxic', 'Hate'],
-            hate_speech_corpus_final['class'].map({0: "Non Toxic", 1: "Toxic", 2: "Hate"}).value_counts(),
-            palette="icefire")
-
-sns.barplot(['Non Toxic', 'Toxic', 'Hate'],
-            hate_speech_corpus_final['class'].map({0: "Non Toxic", 1: "Toxic", 2: "Hate"}).value_counts(),
-            palette="icefire")
+sns.barplot(['Non Toxic', 'Toxic', 'Hate'], hate_speech_corpus_final['class'].map({0:"Non Toxic", 1: "Toxic", 2: "Hate"}).value_counts(), palette="icefire")
 plt.title('Count of Toxic and Hate Comments of Dataset')
 
 # Testing cleaner
