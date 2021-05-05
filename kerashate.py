@@ -80,23 +80,14 @@ y = encoder.fit_transform(y)
 Y = np_utils.to_categorical(y)
 X = X.values
 X = [x[0] for x in X]
-<<<<<<< HEAD
 plt.figure('Dataset Details')
 sns.barplot(['Non Toxic', 'Toxic', 'Hate'], hate_speech_corpus_final['class'].map({0:"Non Toxic", 1: "Toxic", 2: "Hate"}).value_counts(), palette="icefire")
-=======
-sns.barplot(['Non Toxic', 'Toxic', 'Hate'],
-            hate_speech_corpus_final['class'].map({0: "Non Toxic", 1: "Toxic", 2: "Hate"}).value_counts(),
-            palette="icefire")
->>>>>>> 40c002c41b47a50893cc0025035ad0a6b79fcebf
 plt.title('Count of Toxic and Hate Comments of Dataset')
 
-<<<<<<< HEAD
-=======
 # Testing cleaner
 # for idx in hate_speech_corpus_final.tail(15).index:
 #   print(preprocess.cleaner(hate_speech_corpus_final.iloc[idx]['tweet']),'\n'  , hate_speech_corpus_final.iloc[idx]['tweet'], idx)
 #   print("************")
->>>>>>> 40c002c41b47a50893cc0025035ad0a6b79fcebf
 
 import spacy
 from keras.preprocessing.text import Tokenizer
@@ -116,7 +107,6 @@ for word, idx in tokenizer.word_index.items():
       pass
 
 x_train, x_test, y_train, y_test = train_test_split(X,y, test_size = 0.2, random_state = 444, stratify=y)
-<<<<<<< HEAD
 # lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
 # print(lstmMODEL.model.summary())
 # lstmMODEL.fit(x_train, y_train)
@@ -125,13 +115,6 @@ x_train, x_test, y_train, y_test = train_test_split(X,y, test_size = 0.2, random
 rnn = KerasRNNClassifier()
 rnn.fit(x_train, y_train)
 
-=======
-lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
-print(lstmMODEL.model.summary())
-h = lstmMODEL.fit(x_train, y_train)
-print(lstmMODEL.score(x_test, y_test))
-plotHistory(h)
->>>>>>> 40c002c41b47a50893cc0025035ad0a6b79fcebf
 
 # gru = KerasGRUClassifier()
 
@@ -139,15 +122,4 @@ plotHistory(h)
 # print('\nGRU Test Accuracy %.5f' % (gru.score(x_test,y_test)))
 # plotHistory(h, "GRU")
 
-<<<<<<< HEAD
 plt.show()
-=======
-h = gru.fit(x_train,y_train)
-print(gru.score(x_test,y_test))
-plotHistory(h)
-
-
-rnn = KerasRNNClassifier()
-print(rnn.model.summary())
-rnn.fit(x_train, y_train)
->>>>>>> 40c002c41b47a50893cc0025035ad0a6b79fcebf
