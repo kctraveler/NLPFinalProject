@@ -32,7 +32,7 @@ class KerasRNNClassifier:
                 input_dim=self.max_words, output_dim=self.emb_dim,
                 input_length=self.input_length, mask_zero=False,
                 trainable=False))
-        model.add(SimpleRNN(50, return_sequences=False))
+        model.add(SimpleRNN(5, return_sequences=False))
         model.add(Dense(3))
         model.add(Activation('softmax'))
 
