@@ -30,6 +30,9 @@ import preprocess
 from kerasLSTM import KerasLSTMClassifier
 from kerasRNN import KerasRNNClassifier
 
+physical_devices = tf.config.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(physical_devices[0],True)
+
 hate_speech_corpus = pd.read_csv("hate_speech.csv")
 # Shape
 # print("Shape: ", hate_speech_corpus.shape)
