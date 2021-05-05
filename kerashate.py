@@ -33,6 +33,24 @@ physical_devices = tf.config.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0],True)
 
 
+def plotHistory(history):
+      #  "Accuracy"
+      plt.plot(history.history['accuracy'])
+      plt.plot(history.history['val_accuracy'])
+      plt.title('model accuracy')
+      plt.ylabel('accuracy')
+      plt.xlabel('epoch')
+      plt.legend(['train', 'validation'], loc='upper left')
+      plt.show()
+      # "Loss"
+      plt.plot(history.history['loss'])
+      plt.plot(history.history['val_loss'])
+      plt.title('model loss')
+      plt.ylabel('loss')
+      plt.xlabel('epoch')
+      plt.legend(['train', 'validation'], loc='upper left')
+      plt.show()
+
 hate_speech_corpus = pd.read_csv("hate_speech.csv")
 # #Shape
 # print("Shape: ", hate_speech_corpus.shape)
@@ -78,12 +96,15 @@ print(embeddings_index[1])
 
 
 x_train, x_test, y_train, y_test = train_test_split(X,y, test_size = 0.2, random_state = 444, stratify=y)
-# lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
-# print(lstmMODEL.model.summary())
-# lstmMODEL.fit(x_train, y_train)
-# print(lstmMODEL.score(x_test, y_test))
+lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
+print(lstmMODEL.model.summary())
+h = lstmMODEL.fit(x_train, y_train)
+print(lstmMODEL.score(x_test, y_test))
+plotHistory(h)
+
 
 gru = KerasGRUClassifier()
 
-gru.fit(x_train,y_train)
+h = gru.fit(x_train,y_train)
 print(gru.score(x_test,y_test))
+plotHistory(h)

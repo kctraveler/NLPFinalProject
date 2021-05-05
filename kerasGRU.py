@@ -61,15 +61,16 @@ class KerasGRUClassifier:
         self.tokenizer.word_index = {e: i for e,i in self.tokenizer.word_index.items() if i <= self.max_words}
         self.tokenizer.word_index[self.tokenizer.oov_token] = self.max_words + 1
         seqs = self._get_sequences(self._preprocess(X))
-        self.model.fit([seqs ], y, batch_size=self.bs, epochs=self.epochs, validation_split=0.1)
+        history = self.model.fit([seqs ], y, batch_size=self.bs, epochs=self.epochs, validation_split=0.1)
+        return history
     
     def predict_proba(self, X, y=None):
         seqs = self._get_sequences(self._preprocess(X))
         return self.model.predict(seqs)
     
     def predict(self, X, y=None):
-        return np.argmax(self.predict_proba(X), axis=0)
+        return np.argmax(self.predict_proba(X), axis=1)
     
     def score(self, X, y):
         y_pred = self.predict(X)
-        return accuracy_score(np.argmax(y, axis=0), y_pred)
+        return accuracy_score(y, y_pred)
