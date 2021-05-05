@@ -60,7 +60,6 @@ class KerasRNNClassifier:
         self.tokenizer.word_index = {e: i for e, i in self.tokenizer.word_index.items() if i <= self.max_words}
         self.tokenizer.word_index[self.tokenizer.oov_token] = self.max_words + 1
         seqs = self._get_sequences(self._preprocess(X))
-        self.model.fit([seqs], y, batch_size=self.bs, epochs=self.epochs, validation_split=0.3)
         history = self.model.fit([seqs ], y, batch_size=self.bs, epochs=self.epochs, validation_split=0.1)
         return history
 
