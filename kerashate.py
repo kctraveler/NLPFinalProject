@@ -33,23 +33,24 @@ physical_devices = tf.config.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0],True)
 
 
-def plotHistory(history):
+def plotHistory(history, name="Model"):
       #  "Accuracy"
+      plt.figure(name + " Accuracy")
       plt.plot(history.history['accuracy'])
       plt.plot(history.history['val_accuracy'])
-      plt.title('model accuracy')
+      plt.title(name + ' Accuracy')
       plt.ylabel('accuracy')
       plt.xlabel('epoch')
       plt.legend(['train', 'validation'], loc='upper left')
-      plt.show()
+     
       # "Loss"
+      plt.figure(name + " Loss")
       plt.plot(history.history['loss'])
       plt.plot(history.history['val_loss'])
-      plt.title('model loss')
+      plt.title(name + ' Loss')
       plt.ylabel('loss')
       plt.xlabel('epoch')
       plt.legend(['train', 'validation'], loc='upper left')
-      plt.show()
 
 hate_speech_corpus = pd.read_csv("hate_speech.csv")
 # #Shape
@@ -66,14 +67,10 @@ y = encoder.fit_transform(y)
 Y = np_utils.to_categorical(y)
 X = X.values
 X = [x[0] for x in X]
+plt.figure('Dataset Details')
 sns.barplot(['Non Toxic', 'Toxic', 'Hate'], hate_speech_corpus_final['class'].map({0:"Non Toxic", 1: "Toxic", 2: "Hate"}).value_counts(), palette="icefire")
 plt.title('Count of Toxic and Hate Comments of Dataset')
-plt.show()
 
-#Testing cleaner
-# for idx in hate_speech_corpus_final.tail(15).index:
-#   print(preprocess.cleaner(hate_speech_corpus_final.iloc[idx]['tweet']),'\n'  , hate_speech_corpus_final.iloc[idx]['tweet'], idx)
-#   print("************")
 
 import spacy
 from keras.preprocessing.text import Tokenizer
@@ -91,20 +88,19 @@ for word, idx in tokenizer.word_index.items():
           embeddings_index[idx] = embedding
     except:
       pass
-print(embeddings_index[1])
-#lstmMODEL = KerasLSTMClassifier()
-
 
 x_train, x_test, y_train, y_test = train_test_split(X,y, test_size = 0.2, random_state = 444, stratify=y)
 lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
-print(lstmMODEL.model.summary())
+lstmMODEL.model.summary()
 h = lstmMODEL.fit(x_train, y_train)
-print(lstmMODEL.score(x_test, y_test))
-plotHistory(h)
+print('\nLSTM Test Accuracy: %.5f' % (lstmMODEL.score(x_test, y_test)))
+plotHistory(h, 'LSTM')
 
 
 gru = KerasGRUClassifier()
 
 h = gru.fit(x_train,y_train)
-print(gru.score(x_test,y_test))
-plotHistory(h)
+print('\nGRU Test Accuracy %.5f' % (gru.score(x_test,y_test)))
+plotHistory(h, "GRU")
+
+plt.show()

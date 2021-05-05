@@ -35,7 +35,7 @@ class KerasGRUClassifier:
                input_dim=self.max_words, output_dim=self.emb_dim,
                input_length=self.input_length, mask_zero=False,
                trainable=False))
-        model.add(layers.Bidirectional(layers.GRU(400)))
+        model.add(layers.Bidirectional(layers.GRU(4)))
         model.add(layers.Dense(3, activation="softmax"))
 
         model.compile(
