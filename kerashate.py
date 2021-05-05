@@ -28,6 +28,7 @@ from keras.utils import np_utils
 import warnings;warnings.filterwarnings('ignore')
 import preprocess
 from kerasLSTM import KerasLSTMClassifier
+from kerasRNN import KerasRNNClassifier
 
 hate_speech_corpus = pd.read_csv("hate_speech.csv")
 # Shape
@@ -73,9 +74,9 @@ for word, idx in tokenizer.word_index.items():
       pass
 
 x_train, x_test, y_train, y_test = train_test_split(X,y, test_size = 0.2, random_state = 444, stratify=y)
-lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
-print(lstmMODEL.model.summary())
-lstmMODEL.fit(x_train, y_train)
+# lstmMODEL = KerasLSTMClassifier(emb_idx= embeddings_index)
+# print(lstmMODEL.model.summary())
+# lstmMODEL.fit(x_train, y_train)
 # print(lstmMODEL.score(x_test, y_test))
 
 rnn = KerasRNNClassifier()
